@@ -14,7 +14,8 @@ namespace TwentyOne
         {
             try
             {
-                Console.WriteLine("Hello World");
+                Card card = new Card(Suit.Cloves, 1);
+                Console.WriteLine(card.ToString());
             }
             catch (Exception ex)
             {
