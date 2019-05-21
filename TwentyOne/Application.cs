@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace TwentyOne
 {
@@ -14,8 +15,11 @@ namespace TwentyOne
         {
             try
             {
-                Card card = new Card(Suit.Cloves, 1);
-                Console.WriteLine(card.ToString());
+                List<Card> stock = Deck.getStock();
+                foreach (Card card in stock)
+                {
+                    Console.WriteLine(card.ToString());
+                }
             }
             catch (Exception ex)
             {
