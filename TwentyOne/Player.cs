@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 namespace TwentyOne
 {
     /// <summary>
@@ -48,7 +49,28 @@ namespace TwentyOne
         {
             _hand.Add(Deck.RemoveCard());
             UpdateScore();
+        }
 
+        /// <summary>
+        ///     Plays a hand according to _threshold.
+        /// </summary>
+        public void PlayHand()
+        {
+            Stand = false;
+            do
+            {
+                DrawCard();
+            } while (Score < _threshold);
+            if (Score < 21) Stand = true;
+        }
+
+        /// <summary>
+        ///   Removes all Cards from _hand and calls Deck.AddToDicardPile() with _hand.
+        /// </summary>
+        public void DiscardHand()
+        {
+            Deck.AddToDiscardPile(_hand);
+            _hand.Clear();
         }
 
         /// <summary>
@@ -56,7 +78,39 @@ namespace TwentyOne
         /// </summary>
         public void UpdateScore()
         {
+            List<Card> aces = new List<Card>();
+            Score = 0;
+            foreach (Card card in _hand)
+            {
+                if (card.Rank != 1)
+                {
+                    Score += card.Rank;
+                }
+                else { aces.Add(card); }
+            }
 
+            foreach (Card ace in aces)
+            {
+                if (Score + 13 + aces.Count <= 21)
+                {
+                    Score += 13 + aces.Count;
+                }
+                else { Score += aces.Count; }
+            }
+        }
+
+        /// <summary>
+        ///     Converts this Player to a human-readable string.
+        /// </summary>
+        /// <returns>A string representation of this Player.</returns>
+        public override string ToString()
+        {
+            string playerHand = $"{Name}:";
+            foreach (Card card in _hand)
+            {
+                playerHand += $" {card.ToString()}";
+            }
+            return playerHand;
         }
 
     }
