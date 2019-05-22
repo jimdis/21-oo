@@ -15,25 +15,45 @@ namespace TwentyOne
         {
             try
             {
-                Player player1 = new Player("Player #1", 15);
-                Player player2 = new Player("Player #2", 10);
-                Player dealer = new Player("Dealer", 16);
+                for (int i = 0; i < 10; i++)
+                {
+                    Console.WriteLine($"Game numer: {i}");
+                    List<Card> stock = Deck.getStock();
+                    Console.WriteLine("Stock:");
+                    foreach (Card card in stock)
+                    {
+                        Console.WriteLine(card.ToString());
+                    }
+                    List<Card> pile = Deck.getPile();
+                    Console.WriteLine("Pile:");
+                    foreach (Card card in pile)
+                    {
+                        Console.WriteLine(card.ToString());
+                    }
+                    Player player1 = new Player("Player #1", 15);
+                    Player player2 = new Player("Player #2", 10);
+                    Player dealer = new Player("Dealer", 16);
 
-                player1.DrawCard();
-                player2.DrawCard();
-                player1.PlayHand();
-                if (player1.Stand) dealer.PlayHand();
-                Console.WriteLine(player1.ToString());
-                Console.WriteLine(player1.Score);
-                Console.WriteLine(dealer.ToString());
-                Console.WriteLine(dealer.Score);
-                player2.PlayHand();
-                if (player2.Stand) dealer.PlayHand();
-                Console.WriteLine(player2.ToString());
-                Console.WriteLine(player2.Score);
-                Console.WriteLine(dealer.ToString());
-                Console.WriteLine(dealer.Score);
-
+                    player1.DrawCard();
+                    player2.DrawCard();
+                    player1.PlayHand();
+                    if (player1.Stand) dealer.PlayHand();
+                    Console.WriteLine(player1.ToString());
+                    Console.WriteLine(player1.Score);
+                    Console.WriteLine(dealer.ToString());
+                    Console.WriteLine(dealer.Score);
+                    player1.DiscardHand();
+                    dealer.DiscardHand();
+                    player2.PlayHand();
+                    if (player2.Stand) dealer.PlayHand();
+                    Console.WriteLine(player2.ToString());
+                    Console.WriteLine(player2.Score);
+                    Console.WriteLine(dealer.ToString());
+                    Console.WriteLine(dealer.Score);
+                    player2.DiscardHand();
+                    dealer.DiscardHand();
+                    Deck.ResetDeck();
+                }
 
                 // List<Card> hand = new List<Card>();
 

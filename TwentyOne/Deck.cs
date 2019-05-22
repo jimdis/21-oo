@@ -36,11 +36,8 @@ namespace TwentyOne
         {
             Card topCard = _stock.Last();
             _stock.Remove(topCard);
-            if (_stock.Count == 1)
-            {
-                _stock.AddRange(_discardPile);
-                ShuffleStock();
-            }
+
+            if (_stock.Count == 1) ResetDeck();
 
             return topCard;
         }
@@ -53,6 +50,17 @@ namespace TwentyOne
         {
             _discardPile.AddRange(hand);
         }
+
+        /// <summary>
+        ///     Resets the Deck by adding _discardPile to _stock and shuffling it.
+        /// </summary>
+        public static void ResetDeck()
+        {
+            _stock.AddRange(_discardPile);
+            _discardPile.Clear();
+            ShuffleStock();
+        }
+
         // Instantiates a new instance of Random.
         private static Random rng = new Random();
 
