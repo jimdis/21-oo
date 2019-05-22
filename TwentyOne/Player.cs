@@ -8,7 +8,7 @@ namespace TwentyOne
     /// </summary>
     public class Player
     {
-        private int _threshold;
+        protected int _threshold;
         private List<Card> _hand = new List<Card>();
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace TwentyOne
         /// <summary>
         ///     Gets and sets the Stand status of the Player.
         /// </summary>
-        public bool Stand { get; private set; }
+        public bool Stand { get; protected set; }
 
         /// <summary>
         ///     Initializes a new instance of the Player class.
@@ -54,13 +54,13 @@ namespace TwentyOne
         /// <summary>
         ///     Plays a hand according to _threshold.
         /// </summary>
-        public void PlayHand()
+        public virtual void PlayHand()
         {
             Stand = false;
             do
             {
                 DrawCard();
-            } while (Score < _threshold);
+            } while (Score < _threshold && _hand.Count() < 5);
             if (Score < 21) Stand = true;
         }
 
@@ -71,6 +71,7 @@ namespace TwentyOne
         {
             Deck.AddToDiscardPile(_hand);
             _hand.Clear();
+            UpdateScore();
         }
 
         /// <summary>
@@ -105,7 +106,7 @@ namespace TwentyOne
         /// <returns>A string representation of this Player.</returns>
         public override string ToString()
         {
-            string playerHand = $"{Name}:";
+            string playerHand = $"{Name.PadRight(10)}:";
             foreach (Card card in _hand)
             {
                 playerHand += $" {card.ToString()}";

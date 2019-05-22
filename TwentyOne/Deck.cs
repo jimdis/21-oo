@@ -80,17 +80,5 @@ namespace TwentyOne
                 _stock[n] = value;
             }
         }
-
-        // FOR TESTING - REMOVE LATER!
-        public static List<Card> getStock()
-        {
-            return _stock;
-
-        }
-        public static List<Card> getPile()
-        {
-            return _discardPile;
-
-        }
     }
 }

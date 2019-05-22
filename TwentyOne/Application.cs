@@ -15,27 +15,33 @@ namespace TwentyOne
         {
             try
             {
-                for (int i = 0; i < 1; i++)
+                int numberOfPlayers;
+                do
                 {
-                    Console.WriteLine($"Game number: {i}");
-                    Player player1 = new Player("Player #1", 9);
-                    Player player2 = new Player("Player #2", 9);
-                    Player dealer = new Player("Dealer", 9);
+                    Console.Write("Select number of players [1 - 20]: ");
+                } while (!(int.TryParse(Console.ReadLine(), out numberOfPlayers) &&
+                        numberOfPlayers >= 1 &&
+                        numberOfPlayers <= 20));
 
-                    player1.DrawCard();
-                    player2.DrawCard();
-                    player1.PlayHand();
-                    if (player1.Stand) dealer.PlayHand();
-                    ViewResult(player1, dealer);
-                    player1.DiscardHand();
-                    dealer.DiscardHand();
-                    player2.PlayHand();
-                    if (player2.Stand) dealer.PlayHand();
-                    ViewResult(player2, dealer);
-                    player2.DiscardHand();
-                    dealer.DiscardHand();
-                    Deck.ResetDeck();
+                Dealer dealer = new Dealer(16);
+
+                Player[] players = new Player[numberOfPlayers];
+                for (int i = 0; i < numberOfPlayers; i++)
+                {
+                    players[i] = new Player($"Player #{i + 1}", 15);
                 }
+
+                foreach (Player player in players) player.DrawCard();
+
+                foreach (Player player in players)
+                {
+                    player.PlayHand();
+                    if (player.Stand) dealer.PlayHand();
+                    ViewResult(player, dealer);
+                    player.DiscardHand();
+                    dealer.DiscardHand();
+                }
+                Deck.ResetDeck();
             }
             catch (Exception ex)
             {
@@ -44,7 +50,7 @@ namespace TwentyOne
 
         }
 
-        private static Player CheckWinner(Player player, Player dealer)
+        private static Player CheckWinner(Player player, Dealer dealer)
         {
             if (player.Score == dealer.Score) return null;
             if (player.Score > 21) return dealer;
@@ -55,7 +61,7 @@ namespace TwentyOne
             }
             else { return dealer; }
         }
-        private static void ViewResult(Player player, Player dealer)
+        private static void ViewResult(Player player, Dealer dealer)
         {
             Player[] participants = { player, dealer };
             foreach (Player p in participants)
