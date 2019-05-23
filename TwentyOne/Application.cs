@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TwentyOne
 {
@@ -8,6 +9,22 @@ namespace TwentyOne
     /// </summary>
     public static class Application
     {
+
+        /// <summary>
+        /// Number of players in the game.
+        /// </summary>
+        private static int numberOfPlayers = 10;
+
+        /// <summary>
+        /// Range of thresholds to set at random for Players and Dealer (10-18).
+        /// </summary>
+        private static IEnumerable<int> thresholds = Enumerable.Range(10, 9);
+
+        /// <summary>
+        /// Instantiates a new instance of Random.
+        /// </summary>
+        private static Random rng = new Random();
+
         /// <summary>
         /// Runs an application.
         /// </summary>
@@ -15,48 +32,20 @@ namespace TwentyOne
         {
             try
             {
-                int numberOfPlayers;
-                do
-                {
-                    Console.Write("Select number of players [1 - 36]: ");
-                } while (!(int.TryParse(Console.ReadLine(), out numberOfPlayers) &&
-                        numberOfPlayers >= 1 &&
-                        numberOfPlayers <= 36));
-
-                int playerThreshold;
-                do
-                {
-                    Console.Write("Players should stand at score [1 - 21]: ");
-                } while (!(int.TryParse(Console.ReadLine(), out playerThreshold) &&
-                        playerThreshold >= 1 &&
-                        playerThreshold <= 21));
-
-                int dealerThreshold;
-                do
-                {
-                    Console.Write("Dealer should stand at score [1 - 21]: ");
-                } while (!(int.TryParse(Console.ReadLine(), out dealerThreshold) &&
-                dealerThreshold >= 1 &&
-                dealerThreshold <= 21));
-
-                PlayGame(numberOfPlayers, playerThreshold, dealerThreshold);
+                PlayGame(numberOfPlayers);
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"ERROR: {ex}");
             }
-
         }
 
         /// <summary>
         ///     Runs a Game of 21 and outputs the results to the Console.
         /// </summary>
         /// <param name="numberOfPlayers">The number of players in the game</param>
-        /// <param name="playerThreshold">The threshold score where players should stand.</param>
-        /// <param name="dealerThreshold">The threshold score where dealer should stand.</param>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if either threshold is set to < 1 or > 21.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if number of players is set to < 1 or > 36.</exception>
-        private static void PlayGame(int numberOfPlayers, int playerThreshold, int dealerThreshold)
+        private static void PlayGame(int numberOfPlayers)
         {
 
             if (numberOfPlayers < 1 || numberOfPlayers > 36)
@@ -64,13 +53,20 @@ namespace TwentyOne
                 throw new ArgumentOutOfRangeException("Number of Players must be between 1 and 36");
             }
 
-            Dealer dealer = new Dealer(dealerThreshold);
+            Dealer dealer = new Dealer(rng.Next(thresholds.Min(), thresholds.Max()));
+
+            Console.WriteLine($"\n--------------------------------------");
+            Console.WriteLine($"Running new game with {numberOfPlayers} players!");
+            Console.WriteLine($"Dealer's threshold is set to {dealer.Threshold}");
+            Console.WriteLine($"--------------------------------------\n");
 
             Player[] players = new Player[numberOfPlayers];
             for (int i = 0; i < numberOfPlayers; i++)
             {
-                players[i] = new Player($"Player #{i + 1}", playerThreshold);
+                players[i] = new Player($"Player #{i + 1}", rng.Next(thresholds.Min(), thresholds.Max()));
             }
+
+            int dealerWins = 0;
 
             foreach (Player player in players) player.DrawCard();
 
@@ -78,11 +74,12 @@ namespace TwentyOne
             {
                 player.PlayHand();
                 if (player.Stand) dealer.PlayHand();
+                if (CheckWinner(player, dealer) == dealer) dealerWins++;
                 ViewResult(player, dealer);
                 player.DiscardHand();
                 dealer.DiscardHand();
             }
-            Deck.ResetDeck();
+            Console.WriteLine($"Dealer won {dealerWins} out of {numberOfPlayers} hands...\n");
         }
 
         /// <summary>
@@ -106,6 +103,8 @@ namespace TwentyOne
         /// <param name="dealer">A Player.</param>
         private static void ViewResult(Player player, Dealer dealer)
         {
+            Console.WriteLine($"{player.Name} (Threshold {player.Threshold})");
+            Console.WriteLine("----------------------------------------");
             Player[] participants = { player, dealer };
             foreach (Player p in participants)
             {
@@ -120,7 +119,8 @@ namespace TwentyOne
                 }
                 Console.WriteLine(hand);
             }
-            Console.WriteLine($"{CheckWinner(player, dealer).Name} Wins!\n");
+            Console.WriteLine($"{CheckWinner(player, dealer).Name} Wins!");
+            Console.WriteLine("----------------------------------------\n");
         }
     }
 }

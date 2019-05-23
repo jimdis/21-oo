@@ -8,10 +8,6 @@ namespace TwentyOne
     /// </summary>
     public class Player
     {
-        /// <summary>
-        ///     The threshold score where Player stops drawing new cards.
-        /// </summary>
-        protected int _threshold;
 
         /// <summary>
         ///     The hand of the Player.
@@ -22,6 +18,11 @@ namespace TwentyOne
         ///     Gets the Name of the Player.
         /// </summary>
         public string Name { get; }
+
+        /// <summary>
+        ///     Gets the threshold score where Player stops drawing new cards.
+        /// </summary>
+        public int Threshold { get; }
 
         /// <summary>
         ///     Gets and sets the Score of the Player.
@@ -46,7 +47,7 @@ namespace TwentyOne
             {
                 throw new ArgumentOutOfRangeException("Threshold must be between 1 and 21");
             }
-            _threshold = threshold;
+            Threshold = threshold;
         }
 
         /// <summary>
@@ -67,7 +68,7 @@ namespace TwentyOne
             do
             {
                 DrawCard();
-            } while (Score < _threshold && _hand.Count() < 5);
+            } while (Score < Threshold && _hand.Count() < 5);
             if (Score < 21) Stand = true;
         }
 

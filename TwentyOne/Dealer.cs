@@ -6,6 +6,7 @@ namespace TwentyOne
     /// </summary>
     public class Dealer : Player
     {
+
         /// <summary>
         ///     Initializes a new instance of the Dealer class.
         /// </summary>
@@ -22,7 +23,7 @@ namespace TwentyOne
             do
             {
                 DrawCard();
-            } while (Score < _threshold);
+            } while (Score < base.Threshold);
             if (Score < 21) Stand = true;
         }
     }
