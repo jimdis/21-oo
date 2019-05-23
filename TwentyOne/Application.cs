@@ -18,10 +18,10 @@ namespace TwentyOne
                 int numberOfPlayers;
                 do
                 {
-                    Console.Write("Select number of players [1 - 20]: ");
+                    Console.Write("Select number of players [1 - 36]: ");
                 } while (!(int.TryParse(Console.ReadLine(), out numberOfPlayers) &&
                         numberOfPlayers >= 1 &&
-                        numberOfPlayers <= 20));
+                        numberOfPlayers <= 36));
 
                 int playerThreshold;
                 do
@@ -48,8 +48,22 @@ namespace TwentyOne
 
         }
 
+        /// <summary>
+        ///     Runs a Game of 21 and outputs the results to the Console.
+        /// </summary>
+        /// <param name="numberOfPlayers">The number of players in the game</param>
+        /// <param name="playerThreshold">The threshold score where players should stand.</param>
+        /// <param name="dealerThreshold">The threshold score where dealer should stand.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if either threshold is set to < 1 or > 21.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if number of players is set to < 1 or > 36.</exception>
         private static void PlayGame(int numberOfPlayers, int playerThreshold, int dealerThreshold)
         {
+
+            if (numberOfPlayers < 1 || numberOfPlayers > 36)
+            {
+                throw new ArgumentOutOfRangeException("Number of Players must be between 1 and 36");
+            }
+
             Dealer dealer = new Dealer(dealerThreshold);
 
             Player[] players = new Player[numberOfPlayers];
@@ -71,17 +85,25 @@ namespace TwentyOne
             Deck.ResetDeck();
         }
 
+        /// <summary>
+        ///     Checks if Player or Dealer won the game.
+        /// </summary>
+        /// <param name="player">A Dealer.</param>
+        /// <param name="dealer">A Player.</param>
+        /// <returns>The winner of the game.</returns>
         private static Player CheckWinner(Player player, Dealer dealer)
         {
             if (player.Score > 21) return dealer;
             if (dealer.Score > 21) return player;
-            if (player.Score > dealer.Score)
-            {
-                return player;
-            }
-            else { return dealer; }
+            if (player.Score > dealer.Score) return player;
+            return dealer;
         }
 
+        /// <summary>
+        ///     Outputs the result of a game to the console.
+        /// </summary>
+        /// <param name="player">A Dealer.</param>
+        /// <param name="dealer">A Player.</param>
         private static void ViewResult(Player player, Dealer dealer)
         {
             Player[] participants = { player, dealer };

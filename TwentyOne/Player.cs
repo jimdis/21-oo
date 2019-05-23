@@ -8,7 +8,14 @@ namespace TwentyOne
     /// </summary>
     public class Player
     {
+        /// <summary>
+        ///     The threshold score where Player stops drawing new cards.
+        /// </summary>
         protected int _threshold;
+
+        /// <summary>
+        ///     The hand of the Player.
+        /// </summary>
         private List<Card> _hand = new List<Card>();
 
         /// <summary>
@@ -65,7 +72,7 @@ namespace TwentyOne
         }
 
         /// <summary>
-        ///   Removes all Cards from _hand and calls Deck.AddToDicardPile() with _hand.
+        ///   Removes all Cards from hand and adds them to Deck's discard pile.
         /// </summary>
         public void DiscardHand()
         {
@@ -79,18 +86,13 @@ namespace TwentyOne
         /// </summary>
         public void UpdateScore()
         {
-            List<Card> aces = new List<Card>();
-            Score = 0;
-            foreach (Card card in _hand)
-            {
-                if (card.Rank != 1)
-                {
-                    Score += card.Rank;
-                }
-                else { aces.Add(card); }
-            }
+            List<Card> aces = _hand.FindAll(card => card.Rank == 1);
+            List<Card> others = _hand.FindAll(card => card.Rank != 1);
 
-            foreach (Card ace in aces)
+            Score = 0;
+            Score += others.Sum(card => card.Rank);
+
+            if (aces.Count > 0)
             {
                 if (Score + 13 + aces.Count <= 21)
                 {

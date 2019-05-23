@@ -12,6 +12,7 @@ namespace TwentyOne
         /// <param name="threshold">Threshold of the Dealer.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if Threshold is set to < 1 or > 21.</exception>
         public Dealer(int threshold) : base("Dealer", threshold) { }
+
         /// <summary>
         ///     Plays a hand according to _threshold.
         /// </summary>
