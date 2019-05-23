@@ -23,25 +23,23 @@ namespace TwentyOne
                         numberOfPlayers >= 1 &&
                         numberOfPlayers <= 20));
 
-                Dealer dealer = new Dealer(16);
-
-                Player[] players = new Player[numberOfPlayers];
-                for (int i = 0; i < numberOfPlayers; i++)
+                int playerThreshold;
+                do
                 {
-                    players[i] = new Player($"Player #{i + 1}", 15);
-                }
+                    Console.Write("Players should stand at score [1 - 21]: ");
+                } while (!(int.TryParse(Console.ReadLine(), out playerThreshold) &&
+                        playerThreshold >= 1 &&
+                        playerThreshold <= 21));
 
-                foreach (Player player in players) player.DrawCard();
-
-                foreach (Player player in players)
+                int dealerThreshold;
+                do
                 {
-                    player.PlayHand();
-                    if (player.Stand) dealer.PlayHand();
-                    ViewResult(player, dealer);
-                    player.DiscardHand();
-                    dealer.DiscardHand();
-                }
-                Deck.ResetDeck();
+                    Console.Write("Dealer should stand at score [1 - 21]: ");
+                } while (!(int.TryParse(Console.ReadLine(), out dealerThreshold) &&
+                dealerThreshold >= 1 &&
+                dealerThreshold <= 21));
+
+                PlayGame(numberOfPlayers, playerThreshold, dealerThreshold);
             }
             catch (Exception ex)
             {
@@ -50,9 +48,31 @@ namespace TwentyOne
 
         }
 
+        private static void PlayGame(int numberOfPlayers, int playerThreshold, int dealerThreshold)
+        {
+            Dealer dealer = new Dealer(dealerThreshold);
+
+            Player[] players = new Player[numberOfPlayers];
+            for (int i = 0; i < numberOfPlayers; i++)
+            {
+                players[i] = new Player($"Player #{i + 1}", playerThreshold);
+            }
+
+            foreach (Player player in players) player.DrawCard();
+
+            foreach (Player player in players)
+            {
+                player.PlayHand();
+                if (player.Stand) dealer.PlayHand();
+                ViewResult(player, dealer);
+                player.DiscardHand();
+                dealer.DiscardHand();
+            }
+            Deck.ResetDeck();
+        }
+
         private static Player CheckWinner(Player player, Dealer dealer)
         {
-            if (player.Score == dealer.Score) return null;
             if (player.Score > 21) return dealer;
             if (dealer.Score > 21) return player;
             if (player.Score > dealer.Score)
@@ -61,6 +81,7 @@ namespace TwentyOne
             }
             else { return dealer; }
         }
+
         private static void ViewResult(Player player, Dealer dealer)
         {
             Player[] participants = { player, dealer };
@@ -77,8 +98,7 @@ namespace TwentyOne
                 }
                 Console.WriteLine(hand);
             }
-            String winner = CheckWinner(player, dealer)?.Name;
-            Console.WriteLine($"{winner}{(winner != null ? " Wins!" : "Draw!")}\n");
+            Console.WriteLine($"{CheckWinner(player, dealer).Name} Wins!\n");
         }
     }
 }
