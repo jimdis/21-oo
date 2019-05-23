@@ -14,7 +14,7 @@ namespace TwentyOne
         public Dealer(int threshold) : base("Dealer", threshold) { }
 
         /// <summary>
-        ///     Plays a hand according to _threshold.
+        ///     Plays a hand according to threshold.
         /// </summary>
         public override void PlayHand()
         {

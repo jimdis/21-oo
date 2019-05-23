@@ -59,7 +59,7 @@ namespace TwentyOne
         }
 
         /// <summary>
-        ///     Plays a hand according to _threshold.
+        ///     Plays a hand according to threshold.
         /// </summary>
         public virtual void PlayHand()
         {
@@ -82,15 +82,14 @@ namespace TwentyOne
         }
 
         /// <summary>
-        ///     Calculates and updates Score based on _hand.
+        ///     Calculates and updates Score based on the hand.
         /// </summary>
         public void UpdateScore()
         {
             List<Card> aces = _hand.FindAll(card => card.Rank == 1);
-            List<Card> others = _hand.FindAll(card => card.Rank != 1);
 
             Score = 0;
-            Score += others.Sum(card => card.Rank);
+            Score += _hand.Sum(card => card.Rank != 1 ? card.Rank : 0);
 
             if (aces.Count > 0)
             {

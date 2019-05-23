@@ -8,7 +8,14 @@ namespace TwentyOne
     /// </summary>
     public static class Deck
     {
+        /// <summary>
+        ///     The stock of cards that Players draw from.
+        /// </summary>
         private static List<Card> _stock = new List<Card>();
+
+        /// <summary>
+        ///     The discard pile where Players throw their cards.
+        /// </summary>
         private static List<Card> _discardPile = new List<Card>();
 
         /// <summary>
@@ -28,8 +35,8 @@ namespace TwentyOne
         }
 
         /// <summary>
-        ///     Removes and returns the last Card item from _stock.
-        ///     If there is only one Card left in _stock, it is refilled from _discardPile and shuffled.
+        ///     Removes and returns the last Card from the stock.
+        ///     If there is only one Card left in stock, the discard pile is added to the stock and then shuffled.
         /// </summary>
         /// <returns>The last card from _stock.</returns>
         public static Card RemoveCard()
@@ -43,16 +50,16 @@ namespace TwentyOne
         }
 
         /// <summary>
-        ///     Adds an array of Cards to _discardPile.
+        ///     Adds a List of Cards to the discard pile.
         /// </summary>
-        /// <param name="hand">Array of Cards to be added to _discardPile.</param>
+        /// <param name="hand">List of Cards to be added to _discardPile.</param>
         public static void AddToDiscardPile(List<Card> hand)
         {
             _discardPile.AddRange(hand);
         }
 
         /// <summary>
-        ///     Resets the Deck by adding _discardPile to _stock and shuffling it.
+        ///     Resets the Deck by adding the discard pile to the stock and shuffling it.
         /// </summary>
         public static void ResetDeck()
         {
@@ -65,7 +72,7 @@ namespace TwentyOne
         private static Random rng = new Random();
 
         /// <summary>
-        ///     Shuffles elements in _stock base on the Fisher-Yates shuffle.
+        ///     Shuffles elements in _stock based on the Fisher-Yates shuffle.
         ///     Solution adapted from: https://stackoverflow.com/questions/273313/randomize-a-listt
         /// </summary>
         private static void ShuffleStock()
